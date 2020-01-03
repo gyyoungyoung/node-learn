@@ -13,10 +13,10 @@ const app = express();
 
 mongoose.connect('mongodb://localhost/movieactive');
 
-const conn = mongoose.connection;
-conn.on('connected', function(){
-    console.log('mongodb启动成功')
-    });
+// const conn = mongoose.connection;
+// conn.on('connected', function(){
+//     console.log('mongodb启动成功')
+//     });
 
 app.locals.moment = require('moment');
 app.set('views', './views/pages');
@@ -85,7 +85,6 @@ app.post('/admin/movie/new', (req, res) => {
     const id = req.body.movie._id;
     const movieObj = req.body.movie;
     let _movie;
-    console.error(id, 'llllllllllll');
     if (id) {
         Movie.findById(id, (err, movie) => {
             if (err) {
@@ -132,6 +131,19 @@ app.get('/admin/list', (req, res) => {
             movies,
             title: "movie 列表页"
         })
+    });
+});
+
+// list page
+app.get('/admin/lists', (req, res) => {
+    Movie.fetch((err, movies) => {
+        res.header("Access-Control-Allow-Origin", "*");//解决跨域问题
+        res.status(200);
+        res.json(movies);
+        console.log('movies', movies);
+        if (err) {
+            console.error(err);
+        }
     });
 });
 
